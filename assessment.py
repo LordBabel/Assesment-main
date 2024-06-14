@@ -392,12 +392,41 @@ def custom_sql():
 
 
 def add_data():
-    name = input("Please enter a name for the brawler")
-    wallbreak = input("Please enter if they can wallbreak or not")
-    hp = input("Please enter an hp amount")
-    
-
-
+    Id = IDd
+    name = input("Please enter a name for the new brawler: ") 
+    wallbreak = input("Please enter Yes or No for wallbreak: ")
+    hp = input("Please enter an Int for hp: ")
+    year = input("Please enter a year released: ")
+    rarityid = input('''
+                  Based on this table:
+                  1. Common
+                  2. Rare
+                  3. Super Rare
+                  4. Epic
+                  5. Mythic
+                  6. Legendary
+                  7. Starter
+                  Please enter a number that corrosponds to a rarity: ''')
+    classid = input('''
+                  Based on this table:
+                  1. Artillery
+                  2. Assassin
+                  3. Controller
+                  4. Damage Dealer
+                  5. Marksman
+                  6. Support
+                  7. Tank
+                  Please enter a number that corrosponds to a class: ''')
+    try:
+        db = sqlite3.connect(DATABASE)
+        conn = db.cursor()
+        sql = "INSERT INTO Brawlers (ID, Wallbreak, Name, HP, Rarity_ID, Year_Released, Class_ID) VALUES ("+str(Id)+", "+'"'+wallbreak+'"'+", "+name+", "+hp+", "+rarityid+", "+year+", "+classid +")"
+        conn.execute(sql)
+        db.commit()
+        print("All done!")
+        db.close()
+    except:
+        print("Please check your inputs and try again. Make sure hp and year are both intergers, wall break is Yes or No, and rarity and class details are correct.")
 
 
 def remove_data():
@@ -511,10 +540,10 @@ def modify_data():
     db.close()
 
 breaker = 0
+IDd = 81
 while breaker != 1:
     # variables
     checker = 0
-    Id = 81
     # main
     print("What would you like to do with this Brawl Stars Database?")
     # menu
@@ -575,7 +604,21 @@ while breaker != 1:
                 print("Please enter a valid input next time.")
         elif inputs == "2":
             checker = 1
-            modify_data()
+            Arm = input('''
+                  Choose an option.
+                  1. Add data
+                  2. Remove data
+                  3. Modify data
+                  ''')
+            if Arm == "1":
+                add_data()
+                IDd += 1
+            elif Arm == "2":
+                remove_data()
+            elif Arm == "3":
+                modify_data()
+            else:
+                print("Please enter a valid option next time.")
         elif inputs == "3":
             checker = 1
             brawl_stardle()
