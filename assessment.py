@@ -374,6 +374,7 @@ def custom_sql():
                 conn = db.cursor()
                 sql = input("")
                 conn.execute(sql)
+                db.commit()
                 result = conn.fetchall()   
                 for brawler in result:
                     print(brawler)
@@ -391,45 +392,129 @@ def custom_sql():
 
 
 def add_data():
-    pass
+    name = input("Please enter a name for the brawler")
+    wallbreak = input("Please enter if they can wallbreak or not")
+    hp = input("Please enter an hp amount")
+    
+
+
 
 
 def remove_data():
-    inputremove = input("Please type the Name of the brawler you want to delete, include capitals and punctuation: ")
-    db = sqlite3.connect(DATABASE)
-    conn = db.cursor()
-    sql = "DELETE FROM Brawlers WHERE Name == "+inputremove
-    conn.execute(sql)
-    print("All done!")
-    db.close()
+    try:
+        inputremove = input("Please type the Name of the brawler you want to delete. Use correct spelling and punctuation. ")
+        db = sqlite3.connect(DATABASE)
+        conn = db.cursor()
+        sql = "DELETE FROM Brawlers WHERE Name = "+'"'+inputremove+'"'
+        conn.execute(sql)
+        db.commit()
+        print("All done!")
+        db.close()
+    except:
+        print("Please enter a valid input next time.")
 
    
 def modify_data():
     try:
-        inputmodifybrawler = input("Please enter a brawler to alter their infomation.")
-        db = sqlite3.connect(DATABASE)
-        conn = db.cursor()
-        sql = "SELECT * FROM Brawlers WHERE Name == "+inputmodifybrawler
-        conn.execute(sql)
-        db.close()
+        inputmodifybrawler = input("Please enter a brawler to alter their infomation. Use correct spelling and punctuation. ")
+        sqlmodify = "SELECT * FROM Brawlers"
         print('''
             1. Wallbreak
-            2. Name
-            3. HP
-            4. Rarity_ID
-            5. Year_Released
-            6. Class_ID
+            2. HP
+            3. Rarity_ID
+            4. Class_ID
             ''')
-        inputmodify = input("Which of these columns would you like to change?")
+        inputmodify = input("Which of these columns would you like to change? ")
         if inputmodify == "1":
-            pass
+            print('''
+                  1. Yes
+                  2. No
+                  ''')
+            inputmodifywallbreak = input("Please pick an option to change Wallbreak to. ")
+            if inputmodifywallbreak == "1":
+                sqlmodify = '''UPDATE Brawlers SET Wallbreak="Yes" WHERE Name='''+'"'+inputmodifybrawler+'"'
+            elif inputmodifywallbreak == "2":
+                sqlmodify = 'UPDATE Brawlers SET Wallbreak="No" WHERE Name='+'"'+inputmodifybrawler+'"'
+            else: 
+                print("Please enter a valid option next time.")
+        elif inputmodify == "2":
+            inputmodifyhp = input("Please type an HP value to change HP to. ")
+            try:
+                 
+                intinputmodifyhp = int(inputmodifyhp)
+                sqlmodify = "UPDATE Brawlers SET HP = "+intinputmodifyhp+" WHERE Name = "+'"'+inputmodifybrawler+'"'  
+            except:
+                print("Please enter a valid value next time.")
+        elif inputmodify == "3":
+            print('''
+                  1. Common
+                  2. Rare
+                  3. Super Rare
+                  4. Epic
+                  5. Mythic
+                  6. Legendary
+                  7. Starter
+                  ''')
+            inputmodifyrarity = input("Please pick an option to change rarity to. ")
+            if inputmodifyrarity == "1":
+                sqlmodify = "UPDATE Brawlers SET Rarity_ID = 1 WHERE Name == "+'"'+inputmodifybrawler+'"'
+            elif inputmodifyrarity == "2":
+                sqlmodify = "UPDATE Brawlers SET Rarity_ID = 2 WHERE Name == "+'"'+inputmodifybrawler+'"'
+            elif inputmodifyrarity == "3":
+                sqlmodify = "UPDATE Brawlers SET Rarity_ID = 3 WHERE Name == "+'"'+inputmodifybrawler+'"'
+            elif inputmodifyrarity == "4":
+                sqlmodify = "UPDATE Brawlers SET Rarity_ID = 4 WHERE Name == "+'"'+inputmodifybrawler+'"'
+            elif inputmodifyrarity == "5":
+                sqlmodify = "UPDATE Brawlers SET Rarity_ID = 5 WHERE Name == "+'"'+inputmodifybrawler+'"'
+            elif inputmodifyrarity == "6":
+                sqlmodify = "UPDATE Brawlers SET Rarity_ID = 6 WHERE Name == "+'"'+inputmodifybrawler+'"'
+            elif inputmodifyrarity == "7":
+                sqlmodify = "UPDATE Brawlers SET Rarity_ID = 7 WHERE Name == "+'"'+inputmodifybrawler+'"'
+            else:
+                print("Please enter a valid option next time.")
+        elif inputmodify == "4":
+            print('''
+                  1. Artillery
+                  2. Assassin
+                  3. Controller
+                  4. Damage Dealer
+                  5. Marksman
+                  6. Support
+                  7. Tank
+                  ''')
+            inputmodifyclass = input("Please pick an option to change class to. ")
+            if inputmodifyclass == "1":
+                sqlmodify = "UPDATE Brawlers SET Class_ID = 1 WHERE Name == "+'"'+inputmodifybrawler+'"'
+            elif inputmodifyclass == "2":
+                sqlmodify = "UPDATE Brawlers SET Class_ID = 2 WHERE Name == "+'"'+inputmodifybrawler+'"'
+            elif inputmodifyclass == "3":
+                sqlmodify = "UPDATE Brawlers SET Class_ID = 3 WHERE Name == "+'"'+inputmodifybrawler+'"'
+            elif inputmodifyclass == "4":
+                sqlmodify = "UPDATE Brawlers SET Class_ID = 4 WHERE Name == "+'"'+inputmodifybrawler+'"'
+            elif inputmodifyclass == "5":
+                sqlmodify = "UPDATE Brawlers SET Class_ID = 5 WHERE Name == "+'"'+inputmodifybrawler+'"'
+            elif inputmodifyclass == "6":
+                sqlmodify = "UPDATE Brawlers SET Class_ID = 6 WHERE Name == "+'"'+inputmodifybrawler+'"'
+            elif inputmodifyclass == "7":
+                sqlmodify = "UPDATE Brawlers SET Class_ID = 7 WHERE Name == "+'"'+inputmodifybrawler+'"'
+            else:
+                print("Please enter a valid option next time.")
+        else:
+            print("Please enter a valid option next time.")        
     except:
-        print("Please enter a valid brawler ext time.")
+        print("Please enter a valid brawler next time.")
+    db = sqlite3.connect(DATABASE)
+    conn = db.cursor()
+    sql = sqlmodify
+    conn.execute(sql)
+    db.commit()
+    db.close()
 
 breaker = 0
 while breaker != 1:
     # variables
     checker = 0
+    Id = 81
     # main
     print("What would you like to do with this Brawl Stars Database?")
     # menu
@@ -490,6 +575,7 @@ while breaker != 1:
                 print("Please enter a valid input next time.")
         elif inputs == "2":
             checker = 1
+            modify_data()
         elif inputs == "3":
             checker = 1
             brawl_stardle()
